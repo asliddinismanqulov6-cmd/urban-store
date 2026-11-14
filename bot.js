@@ -1,6 +1,6 @@
 require('dotenv').config();const TelegramBot = require('node-telegram-bot-api');
 
-// Bot tokenini shu yerga yozing
+
 const TOKEN = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(TOKEN, {
