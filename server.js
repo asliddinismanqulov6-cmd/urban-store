@@ -17,12 +17,12 @@ app.post("/api/order", async (req, res) => {
         }
 
         const message =
-            " YANGI BUYURTMA\n\n" +
-           " Mahsulot: ${product}\n" +
-           "Narxi: ${price} so'm\n" +
-            "Ismi: ${name}\n" +
-            "Telefon: ${phone}\n" +
-           " Manzil: ${address}";
+            `YANGI BUYURTMA
+            Mahsulot: ${product} 
+            Narxi: ${price} so'm 
+             Ismi: ${name}
+             Telefon: ${phone}
+            Manzil: ${address}`;
 
         const response = await fetch(
             `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage` ,
