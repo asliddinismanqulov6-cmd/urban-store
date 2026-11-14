@@ -36,9 +36,12 @@ app.post("/api/order", async (req, res) => {
             }
         );
 
-        if (!response.ok) {
-            throw new Error("Telegramga yuborilmadi");
-        }
+        const result = await response.json();
+
+if (!result.ok) {
+    console.error("Telegram xatosi:", result);
+    throw new Error(result.description);
+}
 
         res.json({ success: true });
     } catch (error) {
