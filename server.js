@@ -1,10 +1,26 @@
+const { Pool } = require("pg");
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+pool.query(`
+  CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    product TEXT,
+    price TEXT,
+    name TEXT,
+    phone TEXT,
+    address TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`).then(() => console.log("Orders jadvali tayyor"))
+  .catch(err => console.error("Database xatosi:", err));
 app.use(express.json());
 app.use(express.static(__dirname));
 
