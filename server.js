@@ -28,9 +28,7 @@ pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEX
   .catch(err => console.error("Products xatosi:", err));
   async function boshlangichMahsulotlar() {
     const bor = await pool.query("SELECT COUNT(*) FROM products");
-  }
     if (Number(bor.rows[0].count) === 0) {
-        
             for (const m of [
   ["Oversize futbolka", 140000, "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500", 10],
   ["Erkaklar kurtkasi", 280000, "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500", 10],
@@ -42,7 +40,7 @@ pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEX
   );
 }
 }
-
+  }
 boshlangichMahsulotlar().catch(console.error);
 app.use(express.json());
 app.use(express.static(__dirname));
