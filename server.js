@@ -26,9 +26,9 @@ pool.query(`
 pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEXT NOT NULL, price INTEGER NOT NULL, image TEXT, stock INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
   .then(() => console.log("Products jadvali tayyor"))
   .catch(err => console.error("Products xatosi:", err));
-  async function boshlangichMahsulotlar() {}
+  async function boshlangichMahsulotlar() {
     const bor = await pool.query("SELECT COUNT(*) FROM products");
-
+  }
     if (Number(bor.rows[0].count) === 0) {
         
             for (const m of [
