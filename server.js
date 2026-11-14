@@ -25,7 +25,7 @@ app.post("/api/order", async (req, res) => {
            " Manzil: ${address}";
 
         const response = await fetch(
-            "https://api.telegram.org/bot$DIL0/sendMessage,",
+            'https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage' ,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
