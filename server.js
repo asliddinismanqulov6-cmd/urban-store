@@ -56,53 +56,83 @@ app.get("/api/products", async (req, res) => {
     }
 });
 app.post("/api/order", async (req, res) => {
-    try {
-        const { product, price, name, phone, address } = 
-        req.body;
+  const { product, name, phone, address } = req.body;
+  let client;
 
-        if (!product || !name  || !phone || !address) {
-            return res.status(400).json({
-             error: "Ma'lumotlar to'liq emas" 
-            });
-        }
+  try {
+    if (!product || !name || !phone || !address) {
+      return res.status(400).json({ error: "Ma'lumotlar to'liq emas" });
+    }
 
-        const message = [
-            "YANGI BUYURTMA",
-            "Mahsulot: " + product,
-            "Narxi: " + price + " so'm",
-             "Ismi: " + name,
-             "Telefon: " + phone,
-           "Manzil: " + address
-        ].join("\n");
+    client = await pool.connect();
+    await client.query("BEGIN");
 
-        const response = await fetch(
-            "https://api.telegram.org/bot" + process.env.BOT_TOKEN + 
-            "/sendMessage",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  chat_id: process.env.ADMIN_ID,
-                  text: message
-                   
-                })
-            }
-        );
+    const found = await client.query(
+      "SELECT * FROM products WHERE name = $1 FOR UPDATE",
+      [product]
+    );
 
-        const result = await response.json();
+    if (found.rows.length === 0) {
+      throw new Error("Mahsulot topilmadi");
+    }
 
-if (!result.ok) {
-    console.error("Telegram xatosi:", result);
-    throw new Error(result.description);
-}
+    const item = found.rows[0];
 
-        res.json({ success: true });
-} catch (error) {
-        console.error(error);
-        res.status(500).json({ 
-          error: "Buyurtma yuborilmadi" 
-        });
+    if (item.stock < 1) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Mahsulot tugagan" });
+    }
+
+    await client.query(
+      "UPDATE products SET stock = stock - 1 WHERE id = $1",
+      [item.id]
+    );
+
+    await client.query(
+      "INSERT INTO orders (product, price, name, phone, address) VALUES ($1, $2, $3, $4, $5)",
+      [item.name, item.price, name, phone, address]
+    );
+
+    await client.query("COMMIT");
+
+    const message = [
+      "YANGI BUYURTMA",
+      "Mahsulot: " + item.name,
+      "Narxi: " + item.price + " so'm",
+      "Ismi: " + name,
+      "Telefon: " + phone,
+      "Manzil: " + address,
+      "Qolgan soni: " + (item.stock - 1)
+    ].join("\n");
+
+    const response = await fetch(
+      "https://api.telegram.org/bot" + process.env.BOT_TOKEN + "/sendMessage",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: process.env.ADMIN_ID,
+          text: message
+        })
       }
+    );
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      console.error("Telegram xatosi:", result);
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    if (client) {
+      await client.query("ROLLBACK").catch(() => {});
+    }
+    console.error(error);
+    res.status(500).json({ error: "Buyurtma yuborilmadi" });
+  } finally {
+    if (client) client.release();
+  }
 });
 
 app.listen(PORT, "0.0.0.0", () => {
