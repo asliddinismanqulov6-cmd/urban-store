@@ -29,7 +29,17 @@ pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEX
   
 app.use(express.json());
 app.use(express.static(__dirname));
-
+app.get("/api/products", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT * FROM products ORDER BY id DESC"
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Mahsulotlarni olishda xato" });
+    }
+});
 app.post("/api/order", async (req, res) => {
     try {
         const { product, price, name, phone, address } = 
