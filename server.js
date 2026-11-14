@@ -26,7 +26,24 @@ pool.query(`
 pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEXT NOT NULL, price INTEGER NOT NULL, image TEXT, stock INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
   .then(() => console.log("Products jadvali tayyor"))
   .catch(err => console.error("Products xatosi:", err));
-  
+  async function boshlangichMahsulotlar() {}
+    const bor = await pool.query("SELECT COUNT(*) FROM products");
+
+    if (Number(bor.rows[0].count) === 0) {
+        
+            for (const m of [
+  ["Oversize futbolka", 140000, "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500", 10],
+  ["Erkaklar kurtkasi", 280000, "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500", 10],
+  ["Sport oyoq kiyimi", 350000, "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500", 10]
+]) {
+  await pool.query(
+    "INSERT INTO products (name, price, image, stock) VALUES ($1, $2, $3, $4)",
+    m
+  );
+}
+}
+
+boshlangichMahsulotlar().catch(console.error);
 app.use(express.json());
 app.use(express.static(__dirname));
 app.get("/api/products", async (req, res) => {
