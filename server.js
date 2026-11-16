@@ -69,6 +69,29 @@ app.get("/api/products", async (req, res) => {
         res.status(500).json({ error: "Mahsulotlarni olishda xato" });
     }
 });
+app.get("/api/admin/stats", async (req, res) => {
+  const cookie = req.headers.cookie || "";
+  const token = cookie.split("; ")
+    .find(item => item.startsWith("admin_token="))
+    ?.split("=")[1];
+
+  if (!token || !adminTokens.has(token)) {
+    return res.status(401).json({ error: "Ruxsat yo‘q" });
+  }
+
+  try {
+    const products = await pool.query("SELECT COUNT(*) FROM products");
+    const orders = await pool.query("SELECT COUNT(*) FROM orders");
+
+    res.json({
+      products: Number(products.rows[0].count),
+      orders: Number(orders.rows[0].count)
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Xatolik" });
+  }
+});
 app.post("/api/order", async (req, res) => {
   const { product, name, phone, address } = req.body;
   let client;
