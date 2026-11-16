@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBAN STORE Admin Panel</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
+header {
+  background: #111827;
+  color: white;
+  padding: 22px;
+}
+.container {
+  padding: 25px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 15px;
+}
+.card {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+}
+h2 { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h2>URBAN STORE — ADMIN</h2>
+  <p>Boshqaruv paneli</p>
+</header>
+
+<div class="container">
+  <h2>Umumiy ma'lumot</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Mahsulotlar</h3>
+      <h2 id="productCount">0</h2>
+    </div>
+
+    <div class="card">
+      <h3>Buyurtmalar</h3>
+      <h2 id="orderCount">0</h2>
+    </div>
+
+    <div class="card">
+      <h3>Admin holati</h3>
+      <h2>Faol</h2>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
