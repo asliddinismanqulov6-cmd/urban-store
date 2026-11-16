@@ -4,6 +4,9 @@ const express = require("express");
 const path = require("path");
 require("dotenv").config();
 const app = express();
+app.get("/admin.html",(req, res)=> {
+  res.sendFile(path.join(__dirname, "admin.html"));
+});
 const PORT = process.env.PORT || 3000;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
