@@ -47,7 +47,7 @@ app.use(express.static(__dirname));
 app.get("/admin-panel.html", (req, res)=> {
   const cookie = req.headers.cookie || "" ;
   const token = cookie
-  .split;it("; ")
+  .split("; ")
   .find(item => item.startsWith("admin_token="))
   ?.split("=")[1];
 
