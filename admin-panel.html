@@ -60,6 +60,16 @@ h2 { margin-top: 0; }
     </div>
   </div>
 </div>
+<script>
+  async function yuklash() {
+    const res = await fetch("/api/admin/stats");
+    if (!res.ok) return;
 
+    const data = await res.json();
+    document.getElementByld("productCount").textContent = data.products;
+    dacument.getElementByld("orderCount").textContent = data.orders;
+  }
+  yuklash();
+</script>
 </body>
 </html>
