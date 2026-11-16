@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URBAN STORE — Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .login {
+      background: #1f2937;
+      padding: 30px;
+      border-radius: 14px;
+      width: 300px;
+    }
+    h2 { text-align: center; }
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 13px;
+      margin-top: 15px;
+      border-radius: 7px;
+      border: none;
+    }
+    button {
+      background: #16a34a;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="login">
+    <h2>URBAN STORE</h2>
+    <p>Admin panelga kirish</p>
+    <form id="loginForm">
+      <input id="username" placeholder="Login" required>
+      <input id="password" type="password" placeholder="Parol" required>
+      <button type="submit">Kirish</button>
+    </form>
+    <p id="message"></p>
+  </div>
+  <script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const login = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const message = document.getElementById("message");
+
+  try {
+    const response = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ login, password })
+    });
+
+    const result = await response.json();
+    if (result.success){
+        window.location.href = "/admin-panel.html";
+    } else {
+        messeging.textContent = result.message;
+    }
+  } catch (error) {
+    message.textContent = "Server bilan bog‘lanishda xato!";
+  }
+});
+</script>
+</body>
+</html>

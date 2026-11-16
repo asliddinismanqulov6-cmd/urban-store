@@ -1,23 +1,13 @@
-const products = [
-    {
-        name: "Oversize futbolka",
-        price: 140000,
-        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"
-    },
-    {
-        name: "Erkaklar kurtkasi",
-        price: 280000,
-        image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"
-    },
-    {
-        name: "Sport oyoq kiyimi",
-        price: 350000,
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500"
-    }
-];
+
 
 const productList = document.getElementById("product-list");
+async function muhsulotlarniYuklash() {
+    const response = await fetch("/api/products");
+    const products = await response.json();
 
+    productList.innerHTML = "";
+
+   
 products.forEach(function(product) {
     const card = document.createElement("div");
     card.className = "product-card";
@@ -30,6 +20,8 @@ products.forEach(function(product) {
     title.textContent = product.name;
 
     const price = document.createElement("p");
+    const stock = dacument.createElement("p");
+    stock.textContent = "Qoldi: " + product.stock + " dona";
     price.textContent = product.price.toLocaleString("uz-UZ") + " so'm";
 
     const button = document.createElement("button");
@@ -68,12 +60,13 @@ products.forEach(function(product) {
     }
 };
 
-    card.append(img, title, price, button);
+    card.append(img, title, price, stock, button);
     productList.appendChild(card);
 });
-
+}
 function showMessage() {
     document.querySelector(".products").scrollIntoView({
         behavior: "smooth"
     });
 }
+mahsulotlarniYuklash().catch(console.error)

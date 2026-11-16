@@ -62,7 +62,9 @@ h2 { margin-top: 0; }
 </div>
 <script>
   async function yuklash() {
-    const res = await fetch("/api/admin/stats");
+    const res = await fetch("/api/admin/stats",{credentials: "include"
+
+    });
     if (!res.ok) return;
 
     const data = await res.json();
