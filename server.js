@@ -44,6 +44,20 @@ pool.query("CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name TEX
 boshlangichMahsulotlar().catch(console.error);
 app.use(express.json());
 app.use(express.static(__dirname));
+app.get("/admin-panel.html", (req, res)=> {
+  const cookie = req.headers.cookie || "" ;
+  const token = cookie
+  .split;it("; ")
+  .find(item => item.startsWith("admin_token="))
+  ?.split("=")[1];
+
+  if (!token || !adminTokens.has(token)) {
+    return res.redirect("/admin.html");
+}
+
+res.sendFile(path.join(__dirname, "admin-panel.html"));
+});
+
 app.get("/api/products", async (req, res) => {
     try {
         const result = await pool.query(
@@ -134,7 +148,25 @@ app.post("/api/order", async (req, res) => {
     if (client) client.release();
   }
 });
+const crypto = require("crypto");
+const adminTokens = new Set();
+app.post("/api/admin/login", (req, res) => {
+  const { login, password } = req.body;
 
+  if (
+    login !== process.env.ADMIN_LOGIN ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
+    return res.status(401).json({ success: false, message: "Login yoki parol noto‘g‘ri" });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+adminTokens.add(token);
+  res.setHeader(
+    "Set-Cookie",
+    "admin_token=" + token + "; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=3600");
+  res.json({ success: true, message: "Kirish muvaffaqiyatli" });
+});
 app.listen(PORT, "0.0.0.0", () => {
     console.log("URBAN STORE sayt ishga tushdi: " + PORT);
 });
