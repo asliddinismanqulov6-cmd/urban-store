@@ -45,7 +45,14 @@ form input {
 </style>
 </head>
 <body>
-
+<div id="adminLoginBox" class="card">
+  <h2>Admin tizimiga kirish</h2>
+  <form id="adminLoginForm">
+    <input id="adminLogin" placeholder="Login" required>
+    <input id="adminPassword" type="password" placeholder="Parol" required>
+    <button type="submit">Kirish</button>
+  </form>
+</div>
 <header>
   <h2>URBAN STORE — ADMIN</h2>
   <p>Boshqaruv paneli</p>
@@ -82,6 +89,25 @@ form input {
 </form>
 
 <script> 
+document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+e.preventDefault();
+const login = document.getElementById("adminLogin").value;
+const password = document.getElementById("adminPassword").value;
+
+const res = await fetch("/api/admin/login",{
+  method: "POST",
+  credentials: "include",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ login, password })
+});
+const data = await res.json();
+
+if (!res.ok) {
+  alert(data.message || "Login yoki parol xato");
+  return;
+}
+location.reload();
+});
 document.getElementById("productForm").addEventListener("submit", async (e) => {
   e.preventDefult();
 
