@@ -115,7 +115,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
     name:dacument.getElementById("productName"). volue,
     price: Number(document.getElementById("productPrice").value),
     image: document.getElementById("productImage").value,
-    stock: Number(document.getElementById("productStpck").value)
+    stock: Number(document.getElementById("productStock").value)
   };
 
   const res = await fetch("/api/admin/products", {
