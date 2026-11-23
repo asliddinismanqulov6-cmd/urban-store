@@ -72,6 +72,24 @@ app.get("/api/products", async (req, res) => {
         res.status(500).json({ error: "Mahsulotlarni olishda xato" });
     }
 });
+app.post("/api/admin/products",async (req, res) => {
+  const { name, price, image, stock } = req.body;
+
+  if (!name || !price || stock === underfined) {
+    return res.status(400).json({ error: "Ma'lumotlar to'liq emas" });
+  }
+  try {
+    const result = await pool.query(
+      "INSERT  INTO products (name, price, image, stock) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, price, image || "", stock]
+    );
+
+    res.json({ success: true, product: result.rows[0] });
+  } catch (error){
+    console.error(error);
+    res.status(500).json({ error: "Mahsulot qo'shilmadi" });
+  }
+});
 app.get("/api/admin/stats", async (req, res) => {
   const cookie = req.headers.cookie || "";
   const token = cookie.split("; ")
